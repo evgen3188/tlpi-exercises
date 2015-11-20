@@ -8,7 +8,7 @@ all: ${OBJS}
 
 $(OBJ_DIR)/%: %.c
 	@ [ -d $(OBJ_DIR) ] || mkdir $(OBJ_DIR)
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< $(LDLIBS) -o $@
 
 clean:
 	${RM} -rf $(OBJ_DIR)
