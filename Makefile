@@ -2,7 +2,7 @@ include Makefile.inc
 
 TLPI_URL = "http://man7.org/tlpi/code/download/tlpi-151105-dist.tar.gz"
 
-BUILD_DIRS = fileio
+BUILD_DIRS = fileio proc
 
 all: download buildlib build
 
@@ -36,10 +36,19 @@ endif
 
 build:
 	@echo "Building"
-	@for dir in $(BUILD_DIRS); do (cd $$(dir); $(MAKE)); done
+# In old commits I used () instead of {} but it's wrong if we want to build files in more than one subdirectory
+# In the case with () $$(dir) expanded to $(dir) that is an expression for command substitution
+# so $(dir) = a list of subdirectories in the current directory and 
+# cd $$(dir) ALWAYS takes the first word from the list, i.e. 'fileio'
+#
+# In the case with {} $${dir} expanded to ${dir} that is an expression for variable expansion
+# so ${dir} is the next word from the list BUILD_DIRS
+#
+# Also use of ${BUILD_DIRS} or $(BUILD_DIRS) does not matter
+	@for dir in $(BUILD_DIRS); do (cd $${dir}; $(MAKE)); done
 
 cleanlib:
 	@cd $(TLPI_DIR)/lib && $(MAKE) clean
 
 clean:
-	@for dir in $(BUILD_DIRS); do (cd $$(dir); $(MAKE) clean); done
+	@for dir in $(BUILD_DIRS); do (cd $${dir}; $(MAKE) clean); done

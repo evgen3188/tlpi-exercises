@@ -1,17 +1,17 @@
 include ../Makefile.inc
 
-_OBJS = tee
+_EXE = tee
 
-OBJS = $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
+EXE = $(patsubst %,$(EXE_DIR)/%,$(_EXE))
 
-all: ${OBJS}
+all: ${EXE}
 
-$(OBJ_DIR)/%: %.c
-	@ [ -d $(OBJ_DIR) ] || mkdir $(OBJ_DIR)
+$(EXE_DIR)/%: %.c
+	@ [ -d $(EXE_DIR) ] || mkdir $(EXE_DIR)
 	$(CC) $(CFLAGS) $< $(LDLIBS) -o $@
 
 clean:
-	${RM} -rf $(OBJ_DIR)
+	${RM} -r $(EXE_DIR)
 
 showall :
-	@ echo ${OBJS}
+	@ echo $(_EXE)
