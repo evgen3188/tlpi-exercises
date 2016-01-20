@@ -1,3 +1,5 @@
 tlpi-dist/
 */obj/
 *.swp
+*.pyc
+exe/

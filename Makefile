@@ -2,7 +2,8 @@ include Makefile.inc
 
 TLPI_URL = "http://man7.org/tlpi/code/download/tlpi-151105-dist.tar.gz"
 
-BUILD_DIRS = fileio proc
+BUILD_DIRS := $(shell ls -d */ | egrep -v "$(EXCEPT_DIRS)") # := performs expansion here
+# TODO: I saw that '!=' was used for shell substituion but I haven't found some information about it so far
 
 all: download buildlib build
 
@@ -10,7 +11,7 @@ cleanall: cleanlib clean
 
 update: remove download
 
-# Note: Order of defining targets is important
+# TODO: Order of defining targets is important - Check it again
 remove:
 	@echo "Removing $(TLPI_DIR)"
 	@rm -rf $(TLPI_DIR)
@@ -45,10 +46,14 @@ build:
 # so ${dir} is the next word from the list BUILD_DIRS
 #
 # Also use of ${BUILD_DIRS} or $(BUILD_DIRS) does not matter
-	@for dir in $(BUILD_DIRS); do (cd $${dir}; $(MAKE)); done
+# @for dir in $(BUILD_DIRS); do (cd $${dir}; $(MAKE)); done
+	@for dir in $(BUILD_DIRS); do cd $$dir; if [ -f Makefile ]; then make; else make -f ../$(BASE_MAKE); fi; cd ..; done
 
 cleanlib:
 	@cd $(TLPI_DIR)/lib && $(MAKE) clean
 
 clean:
-	@for dir in $(BUILD_DIRS); do (cd $${dir}; $(MAKE) clean); done
+	@for dir in $(BUILD_DIRS); do cd $$dir; if [ -f Makefile ]; then make clean; else make clean -f ../$(BASE_MAKE); fi; cd ..; done
+
+showall:
+	@echo $(BUILD_DIRS)
