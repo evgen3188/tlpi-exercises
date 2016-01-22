@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
       case 'h':
       case '?':
         usageErr("%s [-a] [FILE]", argv[0]);
+        break;
 
       default:
         fatal("Unexpected case in switch: %d", opt);
